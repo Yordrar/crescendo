@@ -15,7 +15,7 @@ run: iso
 
 iso: kernel.img
 	grub-mkrescue -o crescendo.iso iso
-	rm -rf *.o kernel/kernel.img
+	rm -rf *.o iso/kernel.img
 
 kernel.img: $(OBJECTS)
 	ld $(LDFLAGS) $(OBJECTS) -o iso/kernel.img
