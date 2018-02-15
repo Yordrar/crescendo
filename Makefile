@@ -30,4 +30,4 @@ kernel.img: $(OBJECTS)
 	$(CC) $(CFLAGS)  $< -o $@
 
 clean:
-	rm -rf crescendo.iso
+	rm -rf *.o iso/kernel.img crescendo.iso
