@@ -1,8 +1,9 @@
-int main(void) {
-    char* test = (char*)0x000B8000;
+#include "io.h"
+#include "../driver/tty.h"
 
-    test[0] = 'A';
-    test[1] = 0x28;
+int main(void) {
+
+    tty_write('A');
 
     while(1) {
 

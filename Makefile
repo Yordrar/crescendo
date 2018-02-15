@@ -1,4 +1,4 @@
-OBJECTS = boot.o main.o
+OBJECTS = boot.o main.o io.o tty.o
 
 CC = gcc
 CFLAGS = -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector \
@@ -15,7 +15,7 @@ run: iso
 
 iso: kernel.img
 	grub-mkrescue -o crescendo.iso iso
-	rm -rf *.o iso/kernel.img
+	rm -rf *.o kernel/kernel.img
 
 kernel.img: $(OBJECTS)
 	ld $(LDFLAGS) $(OBJECTS) -o iso/kernel.img
@@ -25,6 +25,9 @@ kernel.img: $(OBJECTS)
 
 %.o: kernel/%.s
 	$(AS) $(ASFLAGS) $< -o $@
+
+%.o: driver/%.c
+	$(CC) $(CFLAGS)  $< -o $@
 
 clean:
 	rm -rf crescendo.iso
