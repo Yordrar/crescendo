@@ -1,4 +1,4 @@
-OBJECTS = boot.o main.o io.o tty.o
+OBJECTS = boot.o main.o pio.o tty.o gdt.o gdt_loadgdt.o
 
 CC = gcc
 CFLAGS = -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector \

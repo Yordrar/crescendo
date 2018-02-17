@@ -1,8 +1,8 @@
 global boot
-extern main
+extern kernel_main
 
 MAGIC_NUMBER equ 0x1BADB002
-FLAGS        equ 0x0
+FLAGS        equ 0x00
 CHECKSUM     equ -MAGIC_NUMBER
 
 section .text:
@@ -14,7 +14,8 @@ align 4
 boot:
     mov esp, kernel_stack + 4096
 
-    jmp main
+    push ebx
+    jmp kernel_main
 
     hlt
 
