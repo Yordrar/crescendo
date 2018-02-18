@@ -1,5 +1,6 @@
 global boot
 extern kernel_main
+bits 32
 
 MAGIC_NUMBER equ 0x1BADB002
 FLAGS        equ 0x00
@@ -12,7 +13,7 @@ align 4
     dd CHECKSUM
 
 boot:
-    mov esp, kernel_stack + 4096
+    mov esp, kernel_stack + 8192
 
     push ebx
     jmp kernel_main
@@ -22,4 +23,4 @@ boot:
 section .bss:
 align 4
 kernel_stack:
-    resb 4096
+    resb 8192

@@ -1,3 +1,5 @@
+bits 32
+
 global pio_read_byte
 global pio_write_byte
 global pio_read_word

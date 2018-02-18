@@ -1,4 +1,5 @@
 global gdt_loadgdt
+bits 32
 
 gdt_loadgdt:
     mov eax, [esp+4]
