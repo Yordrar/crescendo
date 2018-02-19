@@ -1,8 +1,8 @@
 #include "idt.h"
 #include "interrupt.h"
+#include "pio.h"
 
-void memset(unsigned char* dest, unsigned char val, unsigned int len)
-{
+void memset(unsigned char* dest, unsigned char val, unsigned int len) {
     unsigned char *temp = (unsigned char*)dest;
     for ( ; len != 0; len--) *temp++ = val;
 }
@@ -45,6 +45,34 @@ void idt_init(void) {
     idt_set_entry(29, (unsigned int)isr29, 0x08, 0x8E);
     idt_set_entry(30, (unsigned int)isr30, 0x08, 0x8E);
     idt_set_entry(31, (unsigned int)isr31, 0x08, 0x8E);
+
+    // Remap the irq table.
+    pio_write_byte(0x20, 0x11);
+    pio_write_byte(0xA0, 0x11);
+    pio_write_byte(0x21, 0x20);
+    pio_write_byte(0xA1, 0x28);
+    pio_write_byte(0x21, 0x04);
+    pio_write_byte(0xA1, 0x02);
+    pio_write_byte(0x21, 0x01);
+    pio_write_byte(0xA1, 0x01);
+    pio_write_byte(0x21, 0x0);
+    pio_write_byte(0xA1, 0x0);
+
+    idt_set_entry(32, (unsigned int)irq0, 0x08, 0x8E);
+    idt_set_entry(33, (unsigned int)irq1, 0x08, 0x8E);
+    idt_set_entry(34, (unsigned int)irq2, 0x08, 0x8E);
+    idt_set_entry(35, (unsigned int)irq3, 0x08, 0x8E);
+    idt_set_entry(36, (unsigned int)irq4, 0x08, 0x8E);
+    idt_set_entry(37, (unsigned int)irq5, 0x08, 0x8E);
+    idt_set_entry(38, (unsigned int)irq6, 0x08, 0x8E);
+    idt_set_entry(39, (unsigned int)irq7, 0x08, 0x8E);
+    idt_set_entry(40, (unsigned int)irq8, 0x08, 0x8E);
+    idt_set_entry(41, (unsigned int)irq9, 0x08, 0x8E);
+    idt_set_entry(42, (unsigned int)irq10, 0x08, 0x8E);
+    idt_set_entry(43, (unsigned int)irq11, 0x08, 0x8E);
+    idt_set_entry(44, (unsigned int)irq12, 0x08, 0x8E);
+    idt_set_entry(45, (unsigned int)irq13, 0x08, 0x8E);
+    idt_set_entry(46, (unsigned int)irq14, 0x08, 0x8E);
 
     idt_loadidt((unsigned int)&idt_ptr);
 }

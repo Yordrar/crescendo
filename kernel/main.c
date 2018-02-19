@@ -2,6 +2,7 @@
 #include "pio.h"
 #include "gdt.h"
 #include "idt.h"
+#include "pit.h"
 #include "../driver/tty.h"
 
 int kernel_main(multiboot_info_t* multiboot_data) {
@@ -13,13 +14,17 @@ int kernel_main(multiboot_info_t* multiboot_data) {
     gdt_init();
     idt_init();
 
+    pit_init(10);
+
+    keyboard_init();
+
     asm volatile("int $0x3");
     asm volatile("int $0x4");
 
-    while(1) {
-        for(int i = 0; i < 20000000; i++) {}
+    asm volatile("sti");
 
-        tty_putchar('A');
+    while(1) {
+        
     }
     
 }
