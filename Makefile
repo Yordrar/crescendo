@@ -9,15 +9,13 @@ LDFLAGS = -T linker.ld -melf_i386
 AS = nasm
 ASFLAGS = -f elf
 
-run: iso
-	qemu-system-i386 crescendo.iso
-	make clean
+run: build/crescendo.iso
+	qemu-system-i386 build/crescendo.iso
 
-iso: kernel.img
-	grub-mkrescue -o crescendo.iso iso
-	rm -rf *.o iso/kernel.img
+build/crescendo.iso: iso/kernel.img
+	grub-mkrescue -o build/crescendo.iso iso
 
-kernel.img: $(OBJECTS)
+iso/kernel.img: $(OBJECTS)
 	ld $(LDFLAGS) $(OBJECTS) -o iso/kernel.img
 
 %.o: kernel/%.c
@@ -30,4 +28,4 @@ kernel.img: $(OBJECTS)
 	$(CC) $(CFLAGS)  $< -o $@
 
 clean:
-	rm -rf *.o iso/kernel.img crescendo.iso
+	rm -rf *.o iso/kernel.img
