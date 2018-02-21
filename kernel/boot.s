@@ -13,11 +13,11 @@ align 4
     dd MULTIBOOT_CHECKSUM
 
 boot:
-    mov esp, kernel_stack + 8192 ; Make space for the stack
-
     cli ; Disable hardware interrupts
 
-    push ebx ; Push multi boot information to the stack to pass it as an argument of kernel_main
+    mov esp, kernel_stack + 8192 ; Make space for the stack
+
+    push ebx ; Push multiboot information to the stack to pass it as an argument of kernel_main
     jmp kernel_main
 
     ; Halt the cpu if kernel_main returns. If we disable interrupts and halt

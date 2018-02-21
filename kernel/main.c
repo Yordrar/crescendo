@@ -19,10 +19,7 @@ int kernel_main(multiboot_info_t* multiboot_data) {
 
     keyboard_init();
 
-    asm volatile("int $0x03");
-    asm volatile("int $0x04");
-
-    asm volatile("sti");
+    __asm__ __volatile__("sti");
 
     while(1) {
         
