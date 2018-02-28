@@ -22,3 +22,10 @@ void tty_putchar(unsigned char c) {
     pio_write_byte(FB_IOPORT_COMMAND, FB_CURSOR_POS_COMMAND_LOWBYTE);
     pio_write_byte(FB_IOPORT_DATA, fb_cursor_pos & 0x00FF);
 }
+
+void tty_clear(void) {
+    for(int i = 0; i < 80*25; i++) {
+        fb_memory[2 * i] = 0;
+        fb_memory[2 * i + 1] = 0;
+    }
+}

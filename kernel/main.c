@@ -15,7 +15,7 @@ int kernel_main(multiboot_info_t* multiboot_data) {
     gdt_init();
     idt_init();
 
-    pit_init(10);
+    pit_init(1000);
 
     keyboard_init();
 

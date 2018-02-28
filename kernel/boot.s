@@ -3,7 +3,7 @@ extern kernel_main
 bits 32
 
 MULTIBOOT_MAGIC_NUMBER equ 0x1BADB002 ; Header for grub to recognize the kernel
-MULTIBOOT_FLAGS        equ 0x00 ; Optional flags for grub
+MULTIBOOT_FLAGS        equ 0x00000000 ; Optional flags for grub
 MULTIBOOT_CHECKSUM     equ -(MULTIBOOT_MAGIC_NUMBER + MULTIBOOT_FLAGS)
 
 section .text:
