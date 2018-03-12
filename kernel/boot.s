@@ -2,9 +2,11 @@ global boot
 extern kernel_main
 bits 32
 
+KERNEL_STACK_SIZE equ 4096
+
 MULTIBOOT_MAGIC_NUMBER equ 0x1BADB002 ; Header for grub to recognize the kernel
 MULTIBOOT_FLAGS        equ 0x00000000 ; Optional flags for grub
-MULTIBOOT_CHECKSUM     equ -(MULTIBOOT_MAGIC_NUMBER + MULTIBOOT_FLAGS)
+MULTIBOOT_CHECKSUM     equ -(MULTIBOOT_MAGIC_NUMBER + MULTIBOOT_FLAGS) ; Checksum for grub
 
 section .text:
 align 4
@@ -15,8 +17,9 @@ align 4
 boot:
     cli ; Disable hardware interrupts
 
-    mov esp, kernel_stack + 8192 ; Make space for the stack
+    mov esp, kernel_stack + KERNEL_STACK_SIZE ; Make space for the stack
 
+    push eax ; Push magic number from grub
     push ebx ; Push multiboot information to the stack to pass it as an argument of kernel_main
     jmp kernel_main
 
@@ -29,4 +32,4 @@ boot:
 section .bss:
 align 4
 kernel_stack:
-    resb 8192
+    resb KERNEL_STACK_SIZE

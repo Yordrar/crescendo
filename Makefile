@@ -1,4 +1,7 @@
-OBJECTS = boot.o main.o pio.o tty.o gdt.o gdt_loadgdt.o idt.o idt_loadidt.o interrupt.o interrupt_routines.o pit.o keyboard.o
+CSOURCES = $(wildcard */*.c)
+ASMSOURCES = $(wildcard */*.s)
+
+OBJECTS = $(patsubst %.c, %.o, $(CSOURCES)) $(patsubst %.s, %.o, $(ASMSOURCES))
 
 CC = gcc
 CFLAGS = -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector \
@@ -9,24 +12,27 @@ LDFLAGS = -T linker.ld -melf_i386
 AS = nasm
 ASFLAGS = -f elf
 
+.PHONY: run obj clean
+
 run: build/crescendo.iso
 	qemu-system-i386 build/crescendo.iso
 
 build/crescendo.iso: iso/kernel.img
+	mkdir -p iso/boot
+	mkdir -p iso/boot/grub
+	touch iso/boot/grub/grub.cfg
+	printf "set timeout=10 \nset default=0 \n\nmenuentry "Crescendo" { \n\tmultiboot /kernel.img \n\tboot \n}" > iso/boot/grub/grub.cfg
 	grub-mkrescue -o build/crescendo.iso iso
-	rm -rf *.o iso/kernel.img
 
 iso/kernel.img: $(OBJECTS)
+	mkdir -p iso
 	ld $(LDFLAGS) $(OBJECTS) -o iso/kernel.img
 
-%.o: kernel/%.c
-	$(CC) $(CFLAGS)  $< -o $@
+%.o: %.c
+	$(CC) $(CFLAGS) $< -o $@
 
-%.o: kernel/%.s
+%.o: %.s
 	$(AS) $(ASFLAGS) $< -o $@
 
-%.o: driver/%.c
-	$(CC) $(CFLAGS)  $< -o $@
-
 clean:
-	rm -rf *.o iso/kernel.img
+	rm -rf $(OBJECTS) iso

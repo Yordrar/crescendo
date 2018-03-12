@@ -1,5 +1,5 @@
 #include "tty.h"
-#include "../kernel/pio.h"
+#include "../arch/pio.h"
 
 #define FB_IOPORT_COMMAND 0x03D4
 #define FB_IOPORT_DATA 0x03D5
