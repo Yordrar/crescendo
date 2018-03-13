@@ -6,9 +6,9 @@
 #include "../driver/tty.h"
 #include "../driver/keyboard.h"
 
-void kernel_main(multiboot_info_t* multiboot_data, int magic) {
+int kernel_main(multiboot_info_t* multiboot_data, int magic) {
 
-    if(multiboot_data->flags & 0x40 || magic == 0x2BADB002) {
+    if((multiboot_data->flags & MULTIBOOT_INFO_MEM_MAP) && magic == MULTIBOOT_BOOTLOADER_MAGIC) {
         tty_putchar('K');
     }
 

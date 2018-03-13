@@ -4,6 +4,7 @@
 #include "../arch/pio.h"
 
 void keyboard_callback(registers_t regs) {
+    if(regs.eax == 0) {}
     char c = pio_read_byte(0x60);
     if(c == 0x1E) {
         tty_putchar('A');
