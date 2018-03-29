@@ -3,4 +3,4 @@
 
 void kernel_panic(const char* msg);
 
-#endif // panics.h
+#endif // panic.h
