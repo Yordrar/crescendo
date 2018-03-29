@@ -1,11 +1,11 @@
 CSOURCES = $(wildcard */*.c)
-ASMSOURCES = $(wildcard */*.s)
+ASMSOURCES = $(wildcard arch/*.s)
 
-OBJECTS = $(patsubst %.s, %.o, $(ASMSOURCES)) $(patsubst %.c, %.o, $(CSOURCES))
+OBJECTS = kernel/boot.o $(patsubst %.s, %.o, $(ASMSOURCES)) $(patsubst %.c, %.o, $(CSOURCES))
 
 CC = gcc
 CFLAGS = -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector \
-			-nostartfiles -nodefaultlibs -Wall -Wextra -lgcc -c
+-nostartfiles -nodefaultlibs -Wall -Wextra -lgcc -c
 
 LD = ld
 LDFLAGS = -T linker.ld -melf_i386

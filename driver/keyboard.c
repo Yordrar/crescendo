@@ -1,10 +1,12 @@
 #include "keyboard.h"
 #include "tty.h"
+
 #include "../arch/interrupt.h"
 #include "../arch/pio.h"
+#include "../arch/cpu.h"
 
-void keyboard_callback(registers_t regs) {
-    if(regs.eax == 0) {}
+void keyboard_callback(interrupt_frame_t regs) {
+    if(regs.eax == 0) {} // DELETE ME
     char c = pio_read_byte(0x60);
     if(c == 0x1E) {
         tty_putchar('A');

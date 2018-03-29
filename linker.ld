@@ -1,4 +1,4 @@
-ENTRY(boot)                /* the name of the entry label */
+ENTRY(boot)
 
 SECTIONS {
     . = 0x00100000;          /* the code should be loaded at 1 MB */

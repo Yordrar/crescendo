@@ -1,4 +1,6 @@
 #include "multiboot.h"
+#include "panic.h"
+
 #include "../arch/pio.h"
 #include "../arch/gdt.h"
 #include "../arch/idt.h"
@@ -19,7 +21,7 @@ int kernel_main(multiboot_info_t* multiboot_data, int magic) {
 
     keyboard_init();
 
-    __asm__ __volatile__("sti");
+    asm volatile("sti");
 
     while(1) {
         

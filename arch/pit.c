@@ -1,20 +1,21 @@
 #include "pit.h"
 #include "interrupt.h"
-#include "../driver/tty.h"
 #include "pio.h"
+#include "cpu.h"
+
+#include "../driver/tty.h"
 
 unsigned int tick = 0;
 
-static void timer_callback(registers_t regs)
-{
-if(regs.int_num == 1000) {}
-   tick++;
+static void pit_callback(interrupt_frame_t regs) {
+    if(regs.int_num == 1000) {}
+    tick++;
 }
 
 void pit_init(unsigned int frequency)
 {
    // Firstly, register our timer callback.
-   register_interrupt_handler(IRQ0, &timer_callback);
+   register_interrupt_handler(IRQ0, &pit_callback);
 
    // The value we send to the PIT is the value to divide it's input clock
    // (1193180 Hz) by, to get our required frequency. Important to note is

@@ -29,3 +29,9 @@ void tty_clear(void) {
         fb_memory[2 * i + 1] = 0;
     }
 }
+
+void tty_write(const char* msg) {
+    for(int i = 0; msg[i] != '\0'; i++) {
+        tty_putchar(msg[i]);
+    }
+}
