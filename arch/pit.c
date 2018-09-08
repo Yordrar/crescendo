@@ -3,9 +3,11 @@
 #include "pio.h"
 #include "cpu.h"
 
-#include "../driver/tty.h"
+#include "../driver/fb.h"
+#include "../kernel/process.h"
 
 unsigned int tick = 0;
+int test = 0;
 
 static void pit_callback(interrupt_frame_t regs) {
     if(regs.int_num == 1000) {}
@@ -14,7 +16,7 @@ static void pit_callback(interrupt_frame_t regs) {
 
 void pit_init(unsigned int frequency)
 {
-   // Firstly, register our timer callback.
+   // First, register the timer callback.
    register_interrupt_handler(IRQ0, &pit_callback);
 
    // The value we send to the PIT is the value to divide it's input clock
@@ -26,10 +28,10 @@ void pit_init(unsigned int frequency)
    pio_write_byte(0x43, 0x36);
 
    // Divisor has to be sent byte-wise, so split here into upper/lower bytes.
-   unsigned char l = (unsigned char)(divisor & 0xFF);
-   unsigned char h = (unsigned char)((divisor>>8) & 0xFF);
+   unsigned char low = (unsigned char)(divisor & 0xFF);
+   unsigned char high = (unsigned char)((divisor>>8) & 0xFF);
 
    // Send the frequency divisor.
-   pio_write_byte(0x40, l);
-   pio_write_byte(0x40, h);
+   pio_write_byte(0x40, low);
+   pio_write_byte(0x40, high);
 }

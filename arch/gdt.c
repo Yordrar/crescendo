@@ -1,5 +1,5 @@
 #include "gdt.h"
-#include "../driver/tty.h"
+#include "../driver/fb.h"
 
 #define GDT_ENTRIES 5
 

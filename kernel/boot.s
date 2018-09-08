@@ -25,8 +25,7 @@ boot:
     push ebx ; Push multiboot information
     call kernel_main
 
-    ; Halt the cpu if kernel_main returns. If we disable interrupts and halt
-    ; the cpu, it will hang forever
+    ; Halt the cpu if kernel_main returns
     cli
     hlt
 

@@ -1,24 +1,36 @@
 #include "process.h"
+#include "../arch/cpu.h"
 
 #define MAX_NUM_PROCESS 1000
 
+unsigned int current_pid;
+
 typedef enum process_state {
+    NO_PROCESS,
     READY, 
     EXECUTING, 
     BLOCKED
 } process_state;
 
-typedef struct PCB {
+typedef struct process {
     int pid;
     process_state state;
-    unsigned int eax, ebx, ecx, edx, edi, esi;
-    unsigned int esp, ebp;
-    unsigned int cs, ds, es, fs, gs, ss;
-    unsigned int eip;
-} PCB;
+    cpu_context context;
+} process;
 
-PCB process_table[MAX_NUM_PROCESS];
+process process_table[MAX_NUM_PROCESS] = {0};
+
+
+void process_init() {
+
+}
+
+void process_create(unsigned int entrypoint) {
+    process_table[current_pid].pid = current_pid;
+    process_table[current_pid].state = READY;
+    process_table[current_pid++].context.eip = entrypoint;
+}
 
 int process_get_state(int pid) {
-    return (int)process_table[pid].pid;
+    return (int)process_table[pid].state;
 }
