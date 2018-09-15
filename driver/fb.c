@@ -1,8 +1,8 @@
 #include "fb.h"
 #include "../arch/pio.h"
 
-#define FB_IOPORT_COMMAND 0x03D4
-#define FB_IOPORT_DATA 0x03D5
+#define FB_PORT_COMMAND 0x03D4
+#define FB_PORT_DATA 0x03D5
 
 #define FB_CURSOR_POS_COMMAND_HIGHBYTE 14
 #define FB_CURSOR_POS_COMMAND_LOWBYTE 15
@@ -17,10 +17,10 @@ void fb_putchar(unsigned char c) {
 
     fb_cursor_pos++;
 
-    pio_write_byte(FB_IOPORT_COMMAND, FB_CURSOR_POS_COMMAND_HIGHBYTE);
-    pio_write_byte(FB_IOPORT_DATA, fb_cursor_pos >> 8);
-    pio_write_byte(FB_IOPORT_COMMAND, FB_CURSOR_POS_COMMAND_LOWBYTE);
-    pio_write_byte(FB_IOPORT_DATA, fb_cursor_pos & 0x00FF);
+    pio_write_byte(FB_PORT_COMMAND, FB_CURSOR_POS_COMMAND_HIGHBYTE);
+    pio_write_byte(FB_PORT_DATA, fb_cursor_pos >> 8);
+    pio_write_byte(FB_PORT_COMMAND, FB_CURSOR_POS_COMMAND_LOWBYTE);
+    pio_write_byte(FB_PORT_DATA, fb_cursor_pos & 0x00FF);
 }
 
 void fb_clear(void) {

@@ -17,5 +17,5 @@ void keyboard_callback(interrupt_frame_t regs) {
 }
 
 void keyboard_init(void) {
-    register_interrupt_handler(IRQ1, &keyboard_callback);
+    interrupt_register_handler(IRQ1, &keyboard_callback);
 }

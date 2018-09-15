@@ -7,17 +7,22 @@
 #include "../kernel/process.h"
 
 unsigned int tick = 0;
-int test = 0;
 
 static void pit_callback(interrupt_frame_t regs) {
-    if(regs.int_num == 1000) {}
-    tick++;
+    if(regs.int_num == 32) {
+        tick++;
+        fb_write("T");
+    } 
+    else {
+        tick++;
+        fb_write("W");
+    }
 }
 
 void pit_init(unsigned int frequency)
 {
    // First, register the timer callback.
-   register_interrupt_handler(IRQ0, &pit_callback);
+   interrupt_register_handler(IRQ0, &pit_callback);
 
    // The value we send to the PIT is the value to divide it's input clock
    // (1193180 Hz) by, to get our required frequency. Important to note is
