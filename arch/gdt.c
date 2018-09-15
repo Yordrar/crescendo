@@ -45,7 +45,7 @@ void gdt_init() {
     gdt_set_entry(2, 0, 0xFFFFFFFF, GDT_ACCESS_PRIVILEGE_KERNEL|
                                     GDT_ACCESS_WRITABLE); // Kernel data segment
 
-    lgdt((unsigned int)gdt, sizeof(gdt));
+    lgdt((unsigned int)&gdt, sizeof(gdt));
 }
 
 void gdt_set_entry(int num, unsigned int base, unsigned int limit, unsigned char access) {
@@ -56,6 +56,6 @@ void gdt_set_entry(int num, unsigned int base, unsigned int limit, unsigned char
     gdt[num].limit_low  = (limit & 0xFFFF);
     gdt[num].flags      = (limit >> 16) & 0x0F;
 
-    gdt[num].flags |= 0xC0;
+    gdt[num].flags |= 0xC;
     gdt[num].access = access;
 }
