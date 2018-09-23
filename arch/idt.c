@@ -4,31 +4,29 @@
 
 #define IDT_ENTRIES 256
 
+struct lidt_struct {
+    unsigned short int size;
+    unsigned int address;
+}__attribute__((packed));
+typedef struct lidt_struct lidt_struct_t;
+
 struct idt_entry {
-    unsigned short int base_low;  //The lower 16 bits of the address to jump to.
-    unsigned short int selector;  //Kernel segment selector.
-    unsigned char  always_zero;   //This must always be zero.
-    unsigned char  flags;         //Flags. See documentation.
-    unsigned short int base_high; //The upper 16 bits of the address to jump to.
+    unsigned short int base_low;  // The lower 16 bits of the address to jump to.
+    unsigned short int selector;  // Kernel segment selector.
+    unsigned char  always_zero;   // This must always be zero.
+    unsigned char  flags;         // More flags. See documentation.
+    unsigned short int base_high; // The upper 16 bits of the address to jump to.
 } __attribute__((packed));
 typedef struct idt_entry idt_entry_t;
 
 idt_entry_t idt[IDT_ENTRIES] = {0};
-
-static inline void
-lidt(idt_entry_t *p, int size)
-{
-  volatile unsigned short int pd[3];
-
-  pd[0] = size-1;
-  pd[1] = (unsigned int)p;
-  pd[2] = (unsigned int)p >> 16;
-
-  asm volatile("lidt (%0)" : : "r" (pd));
-}
+lidt_struct_t idt_ptr;
 
 void idt_init(void) {
-    // Remap the irq table of the PICs
+    idt_ptr.address = (unsigned int)idt;
+    idt_ptr.size = sizeof(idt) - 1;
+
+    // Remap the irq table.
     pio_write_byte(0x20, 0x11);
     pio_write_byte(0xA0, 0x11);
     pio_write_byte(0x21, 0x20);
@@ -40,11 +38,14 @@ void idt_init(void) {
     pio_write_byte(0x21, 0x0);
     pio_write_byte(0xA1, 0x0);
 
-    for(int i = 0; i < 48; i++) {
-        idt_set_entry(i, interrupt_routines[i], 0x08, 0x8E);
+    for(int i = 0; i < 47; i++) {
+        idt_set_entry(i, (unsigned int)interrupt_routines[i], 0x08, 0x8E);
+    }
+    for(int i = 47; i < 256; i++) {
+        idt_set_entry(i, 0, 0, 0);
     }
 
-    lidt((unsigned int)idt, sizeof(idt));
+    idt_loadidt((unsigned int)&idt_ptr);
 }
 
 void idt_set_entry(unsigned char num, unsigned int base, unsigned short int selector, unsigned char flags){
@@ -53,5 +54,7 @@ void idt_set_entry(unsigned char num, unsigned int base, unsigned short int sele
 
     idt[num].selector    = selector;
     idt[num].always_zero = 0;
-    idt[num].flags = flags;
+    // We must uncomment the OR below when we get to using user-mode.
+    // It sets the interrupt gate's privilege level to 3.
+    idt[num].flags = flags /* | 0x60 */;
 }

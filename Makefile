@@ -4,7 +4,7 @@ ASMSOURCES = $(wildcard arch/*.s)
 OBJECTS = kernel/boot.o $(patsubst %.s, %.o, $(ASMSOURCES)) $(patsubst %.c, %.o, $(CSOURCES))
 
 CC = gcc
-CFLAGS = -g -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector \
+CFLAGS = -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector \
 -nostartfiles -nodefaultlibs -Wall -Wextra -lgcc -c
 
 LD = ld
@@ -19,11 +19,11 @@ run: build/crescendo.iso
 	qemu-system-i386 build/crescendo.iso
 	make clean
 
-build/crescendo.iso: crescendo.img
+build/crescendo.iso: iso/crescendo.img
 	rm -rf build/crescendo.iso
 	grub-mkrescue -o build/crescendo.iso iso
 
-crescendo.img: $(OBJECTS)
+iso/crescendo.img: $(OBJECTS)
 	mkdir -p iso/boot/grub
 	touch iso/boot/grub/grub.cfg
 	printf "set timeout=10 \nset default=0 \n\nmenuentry \"Crescendo\" { \n\tmultiboot /crescendo.img \n\tboot \n}" > iso/boot/grub/grub.cfg

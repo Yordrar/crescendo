@@ -4,9 +4,9 @@
 
 #include "../driver/fb.h"
 
-isr_t interrupt_handlers[256] = {0};
+isr_t interrupt_handlers[256];
 
-void interrupt_register_handler(unsigned char n, isr_t handler)
+void register_interrupt_handler(unsigned char n, isr_t handler)
 {
   interrupt_handlers[n] = handler;
 }
@@ -17,7 +17,7 @@ void interrupt_handler(interrupt_frame_t regs) {
         handler(regs);
     }
     else {
-        fb_write("unhandled interrupt received");
+        fb_write("invalid interrupt");
     }
     if(regs.int_num > 31) {
         // Send an EOI (end of interrupt) signal to the PICs

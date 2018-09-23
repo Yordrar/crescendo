@@ -22,22 +22,21 @@
 
 typedef struct interrupt_frame {
     unsigned int ds; // Data segment selector, pushed by interrupt_common
-    unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax; // Pushed by pusha in interrupt_common.
-    unsigned int int_num, error_code; // Interrupt number and error code, pushed in some isr or irq
-    unsigned int eip, cs, eflags, user_esp, ss; // Pushed by the processor automatically.
+    unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax; // Pushed by pusha in interrupt_common
+    unsigned int int_num, error_code; // Interrupt number and error code, pushed in some isr
+    unsigned int eip, cs, eflags, user_esp, ss; // Pushed by the processor automatically
 } interrupt_frame_t;
 
-void interrupt_handler(interrupt_frame_t regs); // The generic interrupt handler that calls the specific handler for each interrupt
+void interrupt_handler(interrupt_frame_t regs); // The interrupt handler
 
-//Registration of callbacks for interrupts or IRQs.
-//For IRQs use the #defines above as the first parameter.
+// Enables registration of callbacks for interrupts or IRQs
+// For IRQs, we use the #defines above as the first parameter
 typedef void (*isr_t)(interrupt_frame_t);
-void interrupt_register_handler(unsigned char n, isr_t handler);
-void irq_handler(interrupt_frame_t regs); // The irq handler
+void register_interrupt_handler(unsigned char n, isr_t handler);
 
-//Entry points of each interrupt, they push the interrupt number
-//and call interrupt_common which saves the registers and calls
-//interrupt_handler which does the handling of each interrupt (defined in interrupt_routines.s)
-extern unsigned int* interrupt_routines;
+// Entry points of each interrupt, they push the interrupt number
+// and call interrupt_common which saves the registers and calls
+// interrupt_handler which does the handling of each interrupt
+extern unsigned int interrupt_routines[];
 
 #endif // interrupt.h
