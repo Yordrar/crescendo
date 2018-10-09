@@ -11,13 +11,14 @@ void interrupt_register_handler(unsigned char n, isr_t handler)
   interrupt_handlers[n] = handler;
 }
 
-void interrupt_handler(interrupt_frame_t regs) {
+void interrupt_generic_handler(interrupt_frame_t regs) {
     if (interrupt_handlers[regs.int_num] != 0) {
         isr_t handler = interrupt_handlers[regs.int_num];
         handler(regs);
     }
     else {
         fb_write("unhandled interrupt received");
+        fb_print_num(regs.int_num);
     }
     if(regs.int_num > 31) {
         // Send an EOI (end of interrupt) signal to the PICs

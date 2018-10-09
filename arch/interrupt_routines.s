@@ -76,7 +76,7 @@ IRQ 13, 45
 IRQ 14, 46
 IRQ 15, 47
 
-extern interrupt_handler
+extern interrupt_generic_handler
 interrupt_common:
   pusha         ; Pushes edi,esi,ebp,esp,ebx,edx,ecx,eax
 
@@ -90,7 +90,7 @@ interrupt_common:
   mov fs, ax
   mov gs, ax
 
-  call interrupt_handler
+  call interrupt_generic_handler
 
   pop eax       ; reload the original data segment descriptor
   mov ds, ax
@@ -103,6 +103,7 @@ interrupt_common:
   sti
   iret          ; restores the old cpu state
 
+section .data
 global interrupt_routines
 interrupt_routines:
   dd isr0
@@ -152,4 +153,3 @@ interrupt_routines:
   dd irq12
   dd irq13
   dd irq14
-  dd irq15

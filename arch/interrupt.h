@@ -27,17 +27,18 @@ typedef struct interrupt_frame {
     unsigned int eip, cs, eflags, user_esp, ss; // Pushed by the processor automatically.
 } interrupt_frame_t;
 
-void interrupt_handler(interrupt_frame_t regs); // The generic interrupt handler that calls the specific handler for each interrupt
+// The generic interrupt handler that calls the specific handler for each interrupt
+void interrupt_generic_handler(interrupt_frame_t regs); 
 
+//A function that handles an interrupt must be of this type
+typedef void (*isr_t)(interrupt_frame_t);
 //Registration of callbacks for interrupts or IRQs.
 //For IRQs use the #defines above as the first parameter.
-typedef void (*isr_t)(interrupt_frame_t);
 void interrupt_register_handler(unsigned char n, isr_t handler);
-void irq_handler(interrupt_frame_t regs); // The irq handler
 
 //Entry points of each interrupt, they push the interrupt number
 //and call interrupt_common which saves the registers and calls
 //interrupt_handler which does the handling of each interrupt (defined in interrupt_routines.s)
-extern unsigned int* interrupt_routines;
+extern unsigned int interrupt_routines[];
 
 #endif // interrupt.h

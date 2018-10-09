@@ -23,7 +23,7 @@ boot:
 
     push eax ; Push the magic number provided by grub to the stack to pass it as an argument of kernel_main
     push ebx ; Push multiboot information
-    jmp kernel_main
+    call kernel_main
 
     ; Halt the cpu if kernel_main returns
     cli

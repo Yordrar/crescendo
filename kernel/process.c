@@ -3,10 +3,10 @@
 
 #define MAX_NUM_PROCESS 1000
 
-unsigned int current_pid;
+unsigned int current_pid = 0;
 
 typedef enum process_state {
-    NO_PROCESS,
+    EMPTY_PROCESS,
     READY, 
     EXECUTING, 
     BLOCKED
@@ -28,7 +28,8 @@ void process_init() {
 void process_create(unsigned int entrypoint) {
     process_table[current_pid].pid = current_pid;
     process_table[current_pid].state = READY;
-    process_table[current_pid++].cpu_frame.eip = entrypoint;
+    process_table[current_pid].cpu_frame.eip = entrypoint;
+    current_pid++;
 }
 
 int process_get_state(int pid) {

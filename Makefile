@@ -16,7 +16,7 @@ ASFLAGS = -f elf
 .PHONY: run clean
 
 run: build/crescendo.iso
-	qemu-system-i386 build/crescendo.iso
+	qemu-system-i386 -d guest_errors build/crescendo.iso
 	make clean
 
 build/crescendo.iso: crescendo.img
