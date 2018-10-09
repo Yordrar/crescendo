@@ -4,7 +4,7 @@ ASMSOURCES = $(wildcard arch/*.s)
 OBJECTS = kernel/boot.o $(patsubst %.s, %.o, $(ASMSOURCES)) $(patsubst %.c, %.o, $(CSOURCES))
 
 CC = gcc
-CFLAGS = -g -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector \
+CFLAGS = -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector \
 -nostartfiles -nodefaultlibs -Wall -Wextra -lgcc -c
 
 LD = ld
