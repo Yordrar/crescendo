@@ -1,26 +1,45 @@
-ENTRY(boot)
+ENTRY(_start)
 
 SECTIONS {
-    . = 0x00100000;          /* the code should be loaded at 1 MB */
+    . = 0xC0100000; /* the code should be linked at 3 GB + 1 MB */
 
-    .text ALIGN (0x1000) :   /* align at 4 KB */
+    kernel_virt_start = .;
+    kernel_phys_start = . - 0xC0000000;
+
+    .text ALIGN (0x1000) : AT(ADDR(.text) - 0xC0000000)  
     {
-        *(.text)             /* all text sections from all files */
+        *(.text .stub .text.* .gnu.linkonce.t.*) /* all text sections from all files */
     }
 
-    .rodata ALIGN (0x1000) : /* align at 4 KB */
+    .rodata ALIGN (0x1000) : AT(ADDR(.rodata) - 0xC0000000) 
     {
-        *(.rodata*)          /* all read-only data sections from all files */
+        *(.rodata .rodata.* .gnu.linkonce.r.*) /* all read-only data sections from all files */
     }
 
-    .data ALIGN (0x1000) :   /* align at 4 KB */
+    /* Include debugging information in kernel memory */
+	.stab ALIGN (0x1000) : AT(ADDR(.stab) - 0xC0000000) 
     {
-        *(.data)             /* all data sections from all files */
+		*(.stab);
+		BYTE(0) /* Force the linker to allocate space for this section */
+	}
+
+	.stabstr ALIGN (0x1000) : AT(ADDR(.stabstr) - 0xC0000000) 
+    {
+		*(.stabstr);
+		BYTE(0) /* Force the linker to allocate space for this section */
+	}
+
+    .data ALIGN (0x1000) : AT(ADDR(.data) - 0xC0000000) 
+    {
+        *(.data) /* all data sections from all files */
     }
 
-    .bss ALIGN (0x1000) :    /* align at 4 KB */
+    .bss ALIGN (0x1000) : AT(ADDR(.bss) - 0xC0000000) 
     {
-        *(COMMON)            /* all COMMON sections from all files */
-        *(.bss)              /* all bss sections from all files */
+        *(COMMON) /* all COMMON sections from all files */
+        *(.bss)   /* all bss sections from all files */
     }
+
+    kernel_virt_end = .;
+    kernel_phys_end = . - 0xC0000000;
 }

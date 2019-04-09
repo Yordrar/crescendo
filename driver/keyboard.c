@@ -1,5 +1,5 @@
 #include "keyboard.h"
-#include "fb.h"
+#include "cga.h"
 
 #include "../arch/interrupt.h"
 #include "../arch/pio.h"
@@ -9,10 +9,10 @@ void keyboard_callback(interrupt_frame_t regs) {
     if(regs.eax == 0) {} // DELETE ME
     char c = pio_read_byte(0x60);
     if(c == 0x1E) {
-        fb_putchar('A');
+        cga_putchar('A');
     }
     if(c == 0x1F) {
-        fb_clear();
+        cga_clear();
     }
 }
 

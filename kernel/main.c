@@ -1,28 +1,26 @@
-#include "multiboot.h"
-#include "panic.h"
-#include "process.h"
+#include <kernel/multiboot.h>
+#include <kernel/panic.h>
+#include <kernel/process.h>
 
-#include "../arch/pio.h"
-#include "../arch/cpu.h"
-#include "../arch/pit.h"
-#include "../driver/fb.h"
-#include "../driver/keyboard.h"
+#include <arch/pio.h>
+#include <arch/cpu.h>
+#include <arch/pit.h>
+#include <driver/cga.h>
+#include <driver/keyboard.h>
 
-int kernel_main(multiboot_info_t* multiboot_data, int magic) {
-    if((multiboot_data->flags & MULTIBOOT_INFO_MEM_MAP) && magic == MULTIBOOT_BOOTLOADER_MAGIC) {
-        fb_write("Multiboot correct\n");
-    }
-    else {
-        kernel_panic("PANIC: booted from a non-multiboot bootloader");
-    }
+void kernel_main(multiboot_info_t* multiboot_data, int magic) {
+	if(magic == MULTIBOOT_BOOTLOADER_MAGIC && (multiboot_data->flags & MULTIBOOT_INFO_MEM_MAP)) {
+		cga_write("Multiboot correct\n");
+	}
+	else {
+		kernel_panic("PANIC: Booted from a non-multiboot bootloader or no memory map is available");
+	}
 
-    cpu_init();
-    pit_init(200);
-    keyboard_init();
-    
-    cpu_enable_interrupts();
-    while(1) {
-        
-    }
-    kernel_panic("PANIC: Attempting to exit kernel_main");
+	cpu_init();
+	pit_init();
+	keyboard_init();
+	
+	cpu_enable_interrupts();
+	
+	kernel_panic("PANIC: Attempting to exit kernel_main");
 }

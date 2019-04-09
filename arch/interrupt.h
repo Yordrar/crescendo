@@ -21,10 +21,10 @@
 #define IRQ15 47
 
 typedef struct interrupt_frame {
-    unsigned int ds; // Data segment selector, pushed by interrupt_common
-    unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax; // Pushed by pusha in interrupt_common.
-    unsigned int int_num, error_code; // Interrupt number and error code, pushed in some isr or irq
-    unsigned int eip, cs, eflags, user_esp, ss; // Pushed by the processor automatically.
+	unsigned int ds; // Data segment selector, pushed by interrupt_common
+	unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax; // Pushed by pusha in interrupt_common.
+	unsigned int int_num, error_code; // Interrupt number and error code, pushed in some isr or irq
+	unsigned int eip, cs, eflags, user_esp, ss; // Pushed by the processor automatically.
 } interrupt_frame_t;
 
 // The generic interrupt handler that calls the specific handler for each interrupt

@@ -1,13 +1,13 @@
 #include "panic.h"
 
-#include "../driver/fb.h"
+#include "../driver/cga.h"
 
 void kernel_panic(const char* msg) {
-    fb_write(msg);
+	cga_write(msg);
 
-    while(1) {
-        asm volatile("cli");
-        asm volatile("hlt");
-    }
-    
+	while(1) {
+		asm volatile("cli");
+		asm volatile("hlt");
+	}
+	
 }

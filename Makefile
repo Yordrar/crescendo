@@ -5,18 +5,23 @@ OBJECTS = kernel/boot.o $(patsubst %.s, %.o, $(ASMSOURCES)) $(patsubst %.c, %.o,
 
 CC = gcc
 CFLAGS = -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector \
--nostartfiles -nodefaultlibs -Wall -Wextra -lgcc -c
+-nostartfiles -nodefaultlibs -Wall -Wextra -lgcc -c -I. -fno-pic \
+-static -fno-strict-aliasing -MD -fno-omit-frame-pointer -ggdb
 
 LD = ld
 LDFLAGS = -T linker.ld -melf_i386
 
 AS = nasm
-ASFLAGS = -f elf
+ASFLAGS = -f elf -g
 
-.PHONY: run clean
+.PHONY: run debug clean
 
 run: build/crescendo.iso
 	qemu-system-i386 -d guest_errors build/crescendo.iso
+	make clean
+
+debug: build/crescendo.iso
+	qemu-system-i386 -S -gdb tcp::7777 build/crescendo.iso
 	make clean
 
 build/crescendo.iso: crescendo.img

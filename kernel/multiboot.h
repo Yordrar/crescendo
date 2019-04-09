@@ -98,46 +98,46 @@ typedef unsigned long long      multiboot_uint64_t;
 
 struct multiboot_header
 {
-    /* Must be MULTIBOOT_MAGIC - see above. */
-    multiboot_uint32_t magic;
+	/* Must be MULTIBOOT_MAGIC - see above. */
+	multiboot_uint32_t magic;
 
-    /* Feature flags. */
-    multiboot_uint32_t flags;
+	/* Feature flags. */
+	multiboot_uint32_t flags;
 
-    /* The above fields plus this one must equal 0 mod 2^32. */
-    multiboot_uint32_t checksum;
+	/* The above fields plus this one must equal 0 mod 2^32. */
+	multiboot_uint32_t checksum;
 
-    /* These are only valid if MULTIBOOT_AOUT_KLUDGE is set. */
-    multiboot_uint32_t header_addr;
-    multiboot_uint32_t load_addr;
-    multiboot_uint32_t load_end_addr;
-    multiboot_uint32_t bss_end_addr;
-    multiboot_uint32_t entry_addr;
+	/* These are only valid if MULTIBOOT_AOUT_KLUDGE is set. */
+	multiboot_uint32_t header_addr;
+	multiboot_uint32_t load_addr;
+	multiboot_uint32_t load_end_addr;
+	multiboot_uint32_t bss_end_addr;
+	multiboot_uint32_t entry_addr;
 
-    /* These are only valid if MULTIBOOT_VIDEO_MODE is set. */
-    multiboot_uint32_t mode_type;
-    multiboot_uint32_t width;
-    multiboot_uint32_t height;
-    multiboot_uint32_t depth;
+	/* These are only valid if MULTIBOOT_VIDEO_MODE is set. */
+	multiboot_uint32_t mode_type;
+	multiboot_uint32_t width;
+	multiboot_uint32_t height;
+	multiboot_uint32_t depth;
 };
 
 /* The symbol table for a.out. */
 struct multiboot_aout_symbol_table
 {
-    multiboot_uint32_t tabsize;
-    multiboot_uint32_t strsize;
-    multiboot_uint32_t addr;
-    multiboot_uint32_t reserved;
+	multiboot_uint32_t tabsize;
+	multiboot_uint32_t strsize;
+	multiboot_uint32_t addr;
+	multiboot_uint32_t reserved;
 };
 typedef struct multiboot_aout_symbol_table multiboot_aout_symbol_table_t;
 
 /* The section header table for ELF. */
 struct multiboot_elf_section_header_table
 {
-    multiboot_uint32_t num;
-    multiboot_uint32_t size;
-    multiboot_uint32_t addr;
-    multiboot_uint32_t shndx;
+	multiboot_uint32_t num;
+	multiboot_uint32_t size;
+	multiboot_uint32_t addr;
+	multiboot_uint32_t shndx;
 };
 typedef struct multiboot_elf_section_header_table multiboot_elf_section_header_table_t;
 
@@ -162,8 +162,8 @@ multiboot_uint32_t mods_addr;
 
 union
 {
-    multiboot_aout_symbol_table_t aout_sym;
-    multiboot_elf_section_header_table_t elf_sec;
+	multiboot_aout_symbol_table_t aout_sym;
+	multiboot_elf_section_header_table_t elf_sec;
 } u;
 
 /* Memory Mapping buffer */
@@ -202,20 +202,20 @@ multiboot_uint8_t framebuffer_bpp;
 multiboot_uint8_t framebuffer_type;
 union
 {
-    struct
-    {
-    multiboot_uint32_t framebuffer_palette_addr;
-    multiboot_uint16_t framebuffer_palette_num_colors;
-    };
-    struct
-    {
-    multiboot_uint8_t framebuffer_red_field_position;
-    multiboot_uint8_t framebuffer_red_mask_size;
-    multiboot_uint8_t framebuffer_green_field_position;
-    multiboot_uint8_t framebuffer_green_mask_size;
-    multiboot_uint8_t framebuffer_blue_field_position;
-    multiboot_uint8_t framebuffer_blue_mask_size;
-    };
+	struct
+	{
+	multiboot_uint32_t framebuffer_palette_addr;
+	multiboot_uint16_t framebuffer_palette_num_colors;
+	};
+	struct
+	{
+	multiboot_uint8_t framebuffer_red_field_position;
+	multiboot_uint8_t framebuffer_red_mask_size;
+	multiboot_uint8_t framebuffer_green_field_position;
+	multiboot_uint8_t framebuffer_green_mask_size;
+	multiboot_uint8_t framebuffer_blue_field_position;
+	multiboot_uint8_t framebuffer_blue_mask_size;
+	};
 };
 };
 typedef struct multiboot_info multiboot_info_t;
