@@ -1,6 +1,7 @@
 #include <kernel/multiboot.h>
 #include <kernel/panic.h>
 #include <kernel/process.h>
+#include <kernel/memory.h>
 
 #include <arch/pio.h>
 #include <arch/cpu.h>
@@ -16,6 +17,7 @@ void kernel_main(multiboot_info_t* multiboot_data, int magic) {
 		kernel_panic("PANIC: Booted from a non-multiboot bootloader or no memory map is available");
 	}
 
+	memory_init();
 	cpu_init();
 	pit_init();
 	keyboard_init();

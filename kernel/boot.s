@@ -31,12 +31,12 @@ _start:
 	mov cr0, ecx
 	;DIRTY
 	
-	mov esp, kernel_stack ;Make space for the stack
+	mov esp, kernel_stack	;Make space for the stack
 	add esp, KERNEL_STACK_SIZE
 	mov ebp, esp
 
-	push eax ;Push the magic number provided by grub to the stack to pass it as an argument of kernel_main
-	push ebx ;Push multiboot information
+	push eax	;Push the magic number provided by grub to the stack to pass it as an argument of kernel_main
+	push ebx	;Push multiboot information
 	call kernel_main
 
 	;Halt the cpu if kernel_main returns

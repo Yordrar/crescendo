@@ -7,7 +7,7 @@
 #define cga_CURSOR_POS_COMMAND_HIGHBYTE 14
 #define cga_CURSOR_POS_COMMAND_LOWBYTE 15
 
-char* cga_memory = (char*)0x0B8000; // 80 x 25, so it ends at 0x0B8FA0
+char* cga_memory = (char*)0xC00B8000; // 80 x 25, so it ends at 0xC00B8FA0
 unsigned short int cga_cursor_pos = 0;
 char cga_current_color = 0x07; // First 4 bytes is BG and second 4 bytes is FG (big endian)
 
@@ -56,7 +56,7 @@ void cga_write(const char* msg) {
 
 void cga_print_num(unsigned int num) {
 	cga_write("0x");
-	char num_str[8] = {0};
+	char num_str[9] = {0};
 	for(int i = 1; i <= 8; i++) {
 		switch(num & 0xF) {
 			case 0:

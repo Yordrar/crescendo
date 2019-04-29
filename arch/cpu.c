@@ -126,9 +126,82 @@ void idt_init(void) {
 
 
 
-///// CPU /////
+///// PAGE TABLE /////
+#define	PAGEDIRIDX(x) (((unsigned int)(x) >> 22) & 0x3FF)
+#define	PAGETABLEIDX(x) (((unsigned int)(x) >> 12) & 0x3FF)
 
+typedef struct page_table_entry {
+	unsigned int present:1;
+	unsigned int writeable:1;
+	unsigned int user_mode:1;
+	unsigned int reserved1:2;
+	unsigned int accessed:1;
+	unsigned int written:1;
+	unsigned int reserved2:2;
+	unsigned int available:3;
+	unsigned int physical_frame:20;
+} page_table_entry_t;
+
+typedef struct page_table {
+	__attribute__((__aligned__(4096)))
+	page_table_entry_t entries[1024];
+} page_table_t;
+
+typedef struct page_directory {
+	__attribute__((__aligned__(4096)))
+	page_table_t* tables[1024];
+} page_directory_t;
+
+page_directory_t* kernel_page_dir;
+
+unsigned int entry_page_dir[];
+__attribute__((__aligned__(4096)))
+unsigned int entry_page_dir[1024] = {
+	// Map VA's [0, 4MB) to PA's [0, 4MB)
+	[0] = (0) | 0x83,
+  	// Map VA's [KERNBASE, KERNBASE+4MB) to PA's [0, 4MB)
+	[PAGEDIRIDX(KERNELBASE)] = (0) | 0x83
+};
+
+void cpu_init_page_dir(void) {
+	kernel_page_dir = memory_kalloc();
+
+	for(int i = &kernel_virt_start; i < alloc_mem_end; i += PAGESIZE) {
+		page_table_t* current_table = kernel_page_dir->tables[PAGEDIRIDX(i)];
+		if(current_table == 0) {
+			kernel_page_dir->tables[PAGEDIRIDX(i)] = memory_kalloc();
+		}
+
+		kernel_page_dir->tables[PAGEDIRIDX(i)]->entries[PAGETABLEIDX(i)].present = 1,
+		kernel_page_dir->tables[PAGEDIRIDX(i)]->entries[PAGETABLEIDX(i)].writeable = 1,
+		kernel_page_dir->tables[PAGEDIRIDX(i)]->entries[PAGETABLEIDX(i)].user_mode = 0,
+		kernel_page_dir->tables[PAGEDIRIDX(i)]->entries[PAGETABLEIDX(i)].physical_frame = (i >> 12);
+	}
+}
+
+void cpu_enable_paging(void) {
+	asm volatile("mov	%%cr4, %%ecx; \
+				  xor	$0x10, %%ecx; \
+				  mov	%%ecx, %%cr4; \
+				  mov 	%0, %%ecx; \
+				  mov	%%ecx, %%cr3;" : : "r"(V2P(kernel_page_dir)) : "memory");
+}
+
+void cpu_page_fault_handler(interrupt_frame_t frame) {
+	cga_write("PANIC: page fault at address ");
+	int address = 0;
+	asm volatile("mov %%cr2, %0" : "=r"(address) : : "memory");
+	cga_print_num(address);
+	kernel_panic("");
+}
+
+
+///// CPU /////
 void cpu_init(void) {
+	interrupt_register_handler(0xE, cpu_page_fault_handler);
+
 	gdt_init();
 	idt_init();
+	cpu_init_page_dir();
+	//cpu_enable_paging();
 }

@@ -26,6 +26,4 @@ static inline void cpu_enable_interrupts(void) {
 	asm volatile("sti");
 }
 
-void cpu_enable_paging(void);
-
 #endif // cpu.h
